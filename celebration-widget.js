@@ -58,15 +58,5 @@ async function createWidget(celebration) {
 
   w.url = "https://celebration.pival.fr";
   w.backgroundColor = new Color("#222222");
-  let dayImage = await loadImage(image)
-  w.backgroundImage = dayImage;
-}
-
-// download an image from a given url
-async function loadImage(imgUrl) {
-  console.log(imgUrl)
-  let req = new Request(imgUrl)
-  req.allowInsecureRequest = true
-  let image = await req.loadImage()
-  return image
+  w.backgroundImage = await new Request(image).loadImage();
 }
