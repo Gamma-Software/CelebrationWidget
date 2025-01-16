@@ -11,7 +11,9 @@ if (config.runsInWidget) {
   Script.complete();
 }
 else if (config.runsInApp) {
-    fm.remove(cachePath)
+    if (fm.fileExists(cachePath)) {
+        fm.remove(cachePath)
+    }
 }
 else{
   const celebration = await getCelebrationData();
