@@ -1,8 +1,5 @@
 const w = new ListWidget();
 const apiUrl = "https://celebration.pival.fr/api/celebration";
-const cacheFile = "daily_celebration.json";
-const fm = FileManager.local();
-const cachePath = fm.joinPath(fm.documentsDirectory(), cacheFile);
 
 if (config.runsInWidget) {
   const celebration = await getCelebrationData();
@@ -22,20 +19,7 @@ else{
 }
 
 async function getCelebrationData() {
-  const now = new Date();
-  const today = now.toISOString().split("T")[0];
-
-  // Check if data is cached and up-to-date
-  if (fm.fileExists(cachePath)) {
-    const cachedData = JSON.parse(fm.readString(cachePath));
-    if (cachedData.date === today) {
-      return cachedData.data;
-    }
-  }
-
-  // Fetch fresh data and cache it
   const celebration = await new Request(apiUrl).loadJSON();
-  fm.writeString(cachePath, JSON.stringify({ date: today, data: celebration }));
   return celebration;
 }
 
