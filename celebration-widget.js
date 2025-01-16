@@ -4,14 +4,20 @@ const cacheFile = "daily_celebration.json";
 const fm = FileManager.local();
 const cachePath = fm.joinPath(fm.documentsDirectory(), cacheFile);
 
-const celebration = await getCelebrationData();
-createWidget(celebration);
-
-if (!config.runsInWidget) {
+if (config.runsInWidget) {
+  const celebration = await getCelebrationData();
+  createWidget(celebration);
+  Script.setWidget(w);
+  Script.complete();
+}
+else if (config.runsInApp) {
+    fm.remove(cachePath)
+}
+else{
+  const celebration = await getCelebrationData();
+  createWidget(celebration);
   w.presentMedium();
 }
-Script.setWidget(w);
-Script.complete();
 
 async function getCelebrationData() {
   const now = new Date();
@@ -44,10 +50,6 @@ async function createWidget(celebration) {
     action
   } = celebration;
 
-  w.url = "https://celebration.pival.fr";
-  w.backgroundColor = new Color("#222222");
-  w.backgroundImage = await new Request(image).loadImage();
-
   // Add a semi-transparent dark overlay
   let gradient = new LinearGradient();
   gradient.colors = [new Color("#000000", 0.3), new Color("#000000", 0.3)];
@@ -67,4 +69,18 @@ async function createWidget(celebration) {
   amountTxt.textColor = Color.white();
   amountTxt.font = Font.systemFont(24);
   amountTxt.centerAlignText();
+
+  w.url = "https://celebration.pival.fr";
+  w.backgroundColor = new Color("#222222");
+  let dayImage = await loadImage(image)
+  w.backgroundImage = dayImage;
+}
+
+// download an image from a given url
+async function loadImage(imgUrl) {
+  console.log(imgUrl)
+  let req = new Request(imgUrl)
+  req.allowInsecureRequest = true
+  let image = await req.loadImage()
+  return image
 }
