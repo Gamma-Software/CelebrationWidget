@@ -7,11 +7,6 @@ if (config.runsInWidget) {
   Script.setWidget(w);
   Script.complete();
 }
-else if (config.runsInApp) {
-    if (fm.fileExists(cachePath)) {
-        fm.remove(cachePath)
-    }
-}
 else{
   const celebration = await getCelebrationData();
   createWidget(celebration);
